@@ -1,0 +1,30 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PWMSparkMax[0]": "Motor Controller",
+      "/SmartDashboard/Arm Sim": "Mechanism2d"
+    },
+    "windows": {
+      "/LiveWindow/Ungrouped/PIDController[1]": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Arm Sim": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "SmartDashboard": {
+      "Arm Sim": {
+        "open": true
+      },
+      "open": true
+    }
+  }
+}
