@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
  * arcade steering and an Xbox controller.
  */
 public class Robot extends TimedRobot {
-  private final PWMSparkMax m_leftMotor = new PWMSparkMax(0);
+  private final PWMSparkMx m_leftMotor = new PWMSparkMax(0);
   private final PWMSparkMax m_rightMotor = new PWMSparkMax(1);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
   private final XboxController m_driverController = new XboxController(0);
@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    m_rightMotor.setInverted(true);
+    m_rightMotor.setInverted(1); 
   }
 
   @Override
@@ -32,6 +32,19 @@ public class Robot extends TimedRobot {
     // Drive with split arcade drive.
     // That means that the Y axis of the left stick moves forward
     // and backward, and the X of the right stick turns left and right.
-    m_robotDrive.arcadeDrive(-m_driverController.getLeftY(), m_driverController.getRightX());
+    var left = -m_driverController.getLeft(); 
+    var right = m_driverController.getRightX();
+
+    // square the controller values so that we have fine control at low speeds
+    // and more reaction at high speeds
+    var squareControllerValues(left, right);
+    m_robotDrive.arcadeDrive(left, right); 
+  }
+
+  private void squareControllerValues(float leftWheel, float rightWheel) {
+    // Square the values for left and right wheels
+    var squaredLeft = Math.pow(leftWheel, 2);
+    var squaredRight = Math.pow(rightWheel, 2);
+    return Math.pow(leftWheel, rightWheel);
   }
 }
