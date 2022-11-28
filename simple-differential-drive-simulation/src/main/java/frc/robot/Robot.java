@@ -8,7 +8,6 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -25,9 +24,9 @@ public class Robot extends TimedRobot {
   private final SlewRateLimiter m_speedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
-  private final Drivetrain m_drive = new Drivetrain();
+  private final Drivetrain m_drive = new Drivetrai();
   private final RamseteController m_ramsete = new RamseteController();
-  private final Timer m_timer = new Timer();
+  private Timer m_timer;
   private Trajectory m_trajectory;
 
   @Override
@@ -36,12 +35,11 @@ public class Robot extends TimedRobot {
     // are sent during every iteration.
     setNetworkTablesFlushEnabled(true);
 
-    m_trajectory =
-        TrajectoryGenerator.generateTrajectory(
-            new Pose2d(2, 2, new Rotation2d()),
-            List.of(),
-            new Pose2d(6, 4, new Rotation2d()),
-            new TrajectoryConfig(2, 2));
+    m_trajectory = TrajectoryGenerator.generateTrajectory(
+        new Pose2d(2, 2, new Rotation2d()),
+        List.of(),
+        new Pose2d(6, 4, new Rotation2d()),
+        new TrajectoryConfig(2, 2));
   }
 
   @Override
@@ -61,7 +59,18 @@ public class Robot extends TimedRobot {
     double elapsed = m_timer.get();
     Trajectory.State reference = m_trajectory.sample(elapsed);
     ChassisSpeeds speeds = m_ramsete.calculate(m_drive.getPose(), reference);
-    m_drive.drive(speeds.vxMetersPerSecond, speeds.omegaRadiansPerSecond);
+    var xSpeed = speeds.vxMetersPerSecond;
+    var rot = speeds.omegaRadiansPerSecond;
+    m_drive.drive(xSpeed);
+
+    String[] name = {
+        "tom",
+        "dick",
+        "harry"
+    };
+    for (int i = 0; i <= name.length; i++) {
+      System.out.print(name[i] + '\n');
+    }
   }
 
   @Override

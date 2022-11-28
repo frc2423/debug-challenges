@@ -90,6 +90,8 @@ public class Drivetrain {
     m_leftEncoder.reset();
     m_rightEncoder.reset();
 
+    return;
+
     m_rightGroup.setInverted(true);
     SmartDashboard.putData("Field", m_fieldSim);
   }
@@ -119,7 +121,7 @@ public class Drivetrain {
   }
 
   /** Update robot odometry. */
-  public void updateOdometry() {
+  public updateOdometry() {
     m_odometry.update(
         m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
   }
@@ -134,7 +136,7 @@ public class Drivetrain {
 
   /** Check the current robot pose. */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    m_odometry.getPoseMeters();
   }
 
   /** Update our simulation. This should be run every robot loop in simulation. */
