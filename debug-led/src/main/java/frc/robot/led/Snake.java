@@ -1,18 +1,17 @@
 package frc.robot.led;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.utils.NtHelper;;
 
 public class Snake implements Led {
 
     enum Direction {
         UP, DOWN, LEFT, RIGHT, NONE
     };
+
     int gridSideLength = 20;
     Translation2d[] snake;
     Direction direction = Direction.DOWN;
@@ -22,27 +21,24 @@ public class Snake implements Led {
     Translation2d target;
     double targetSpawnInterval = 20.0;
     int score;
-    NetworkTableEntry scoreEntry;
 
     public void start(AddressableLEDBuffer buffer, int length) {
-        NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        NetworkTable table = inst.getTable("snake");
-        scoreEntry = table.getEntry("score");
+        NtHelper.setDouble("score", 0);
 
         snake = new Translation2d[] {
                 new Translation2d(0, 1),
                 new Translation2d(0, 2),
                 new Translation2d(0, 3),
                 new Translation2d(0, 4),
-                new Translation2d(0, 5), 
+                new Translation2d(0, 5),
         };
         score = 0;
         spawnTarget();
         timer.reset();
-        timer.start(); 
+        timer.start();
         targetTimer.reset();
         targetTimer.start();
-        
+
     }
 
     public void run(AddressableLEDBuffer buffer, int length) {
@@ -54,13 +50,13 @@ public class Snake implements Led {
         }
 
         var foundTarget = hasFoundTarget();
-        if(targetTimer.get() > .15 || foundTarget) {
+        if (targetTimer.get() > .15 || foundTarget) {
             score += 1;
             spawnTarget();
             targetTimer.reset();
         }
 
-        scoreEntry.setNumber(score);
+        NtHelper.setDouble("score", score);
         clearBuffer(buffer);
         drawTarget(buffer);
         drawSnake(buffer);
@@ -76,12 +72,13 @@ public class Snake implements Led {
             headY--;
         } else if (direction == Direction.DOWN) {
             headY++;
-        } else if (direction == Direction.RIGHT) { 
+        } else if (direction == Direction.RIGHT) {
             headX--;
         } else if (direction == Direction.LEFT) {
             headX++;
         }
-        snake[4] = new Translation2d((headX + gridSideLength) % gridSideLength, (headY + gridSideLength) % gridSideLength);
+        snake[4] = new Translation2d((headX + gridSideLength) % gridSideLength,
+                (headY + gridSideLength) % gridSideLength);
     }
 
     private void updateDirection() {
@@ -123,7 +120,7 @@ public class Snake implements Led {
     }
 
     private void drawSnake(AddressableLEDBuffer buffer) {
-        for (var i = 0; i < snake.length - 1; i+=2) { 
+        for (var i = 0; i < snake.length - 1; i += 2) {
             buffer.setRGB(getPointIndex(snake[i]), 255, 0, 0);
         }
         buffer.setRGB(getPointIndex(snake[snake.length - 1]), 255, 150, 150);
@@ -136,7 +133,7 @@ public class Snake implements Led {
     private void spawnTarget() {
         var x = getRandomNumber(0, gridSideLength - 1);
         var y = getRandomNumber(0, gridSideLength - 1);
-        target = new Translation2d(x,y);
+        target = new Translation2d(x, y);
     }
 
     private boolean hasFoundTarget() {
