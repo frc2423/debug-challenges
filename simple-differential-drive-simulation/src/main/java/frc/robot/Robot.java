@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
     m_drive.drive(xSpeed);
 
     String[] name = {
-        "tom",
+        "tom,
         "dick",
         "harry"
     };
